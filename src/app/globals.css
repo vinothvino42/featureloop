@@ -139,7 +139,11 @@
 }
 
 @layer components {
-  .submit-button {
-    @apply bg-black text-white;
+  .button-primary {
+    @apply w-full cursor-pointer bg-black text-white;
+  }
+
+  .social-auth-button {
+    @apply w-full cursor-pointer;
   }
 }
