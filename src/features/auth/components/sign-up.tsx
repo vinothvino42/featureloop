@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { OctagonAlertIcon } from "lucide-react";
@@ -24,27 +23,21 @@ import { useRouter } from "next/navigation";
 import BrandPanel from "./brand-panel";
 import LegalLinks from "./legal-links";
 import FeatureloopIconHeader from "./featureloop-icon-header";
-import { authClient } from "@/lib/auth-client";
-
-const formSchema = z
-  .object({
-    name: z.string().min(1, { message: "Name is required " }),
-    email: z.string().email(),
-    password: z.string().min(1, { message: "Password is required" }),
-    confirmPassword: z.string().min(1, { message: "Password is required " }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPasswords"],
-  });
+import {
+  SignUpInput,
+  signUpInputSchema,
+  useSignUp,
+} from "../hooks/use-sign-up";
+import { useSocialSignIn } from "../hooks/use-social-sign-in";
 
 export default function SignUp() {
   const router = useRouter();
-  const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const signUp = useSignUp();
+  const socialSignIn = useSocialSignIn();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignUpInput>({
+    resolver: zodResolver(signUpInputSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -53,47 +46,18 @@ export default function SignUp() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    setError(null);
-    setPending(true);
-
-    authClient.signUp.email(
-      {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        callbackURL: "/",
-      },
-      {
-        onSuccess: () => {
-          setPending(false);
-          router.push("/");
-        },
-        onError: ({ error }) => {
-          setPending(false);
-          setError(error.message);
-        },
-      }
-    );
+  const onSubmit = (data: SignUpInput) => {
+    signUp.mutate(data, {
+      onSuccess: () => router.push("/"),
+      onError: (error) => setError(error.message),
+    });
   };
 
   const onSocial = (provider: "google" | "github") => {
-    setError(null);
-    setPending(true);
-
-    authClient.signIn.social(
+    socialSignIn.mutate(
+      { provider },
       {
-        provider: provider,
-        callbackURL: "/",
-      },
-      {
-        onSuccess: () => {
-          setPending(false);
-        },
-        onError: ({ error }) => {
-          setPending(false);
-          setError(error.message);
-        },
+        onError: (error) => setError(error.message),
       }
     );
   };
@@ -184,7 +148,11 @@ export default function SignUp() {
                   <AlertTitle>{error}</AlertTitle>
                 </Alert>
               )}
-              <Button disabled={pending} type="submit" className="w-full">
+              <Button
+                disabled={signUp.isPending}
+                type="submit"
+                className="w-full"
+              >
                 Sign Up
               </Button>
               <div className="after:border-border after:item-center after:border-top relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex">
@@ -194,7 +162,7 @@ export default function SignUp() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Button
-                  disabled={pending}
+                  disabled={socialSignIn.isPending}
                   variant="outline"
                   type="button"
                   className="w-full"
@@ -204,7 +172,7 @@ export default function SignUp() {
                   Google
                 </Button>
                 <Button
-                  disabled={pending}
+                  disabled={socialSignIn.isPending}
                   variant="outline"
                   type="button"
                   className="w-full"

@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { OctagonAlertIcon } from "lucide-react";
@@ -23,67 +22,40 @@ import { useState } from "react";
 import BrandPanel from "./brand-panel";
 import LegalLinks from "./legal-links";
 import FeatureloopIconHeader from "./featureloop-icon-header";
-import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1, { message: "Password is required" }),
-});
+import {
+  SignInInput,
+  signInInputSchema,
+  useSignIn,
+} from "../hooks/use-sign-in";
+import { useSocialSignIn } from "../hooks/use-social-sign-in";
 
 export default function SignIn() {
   const router = useRouter();
-  const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const signIn = useSignIn();
+  const socialSignIn = useSocialSignIn();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignInInput>({
+    resolver: zodResolver(signInInputSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    setError(null);
-    setPending(true);
-
-    authClient.signIn.email(
-      {
-        email: data.email,
-        password: data.password,
-        callbackURL: "/",
-      },
-      {
-        onSuccess: () => {
-          setPending(false);
-          router.push("/");
-        },
-        onError: ({ error }) => {
-          setPending(false);
-          setError(error.message);
-        },
-      }
-    );
+  const onSubmit = (data: SignInInput) => {
+    signIn.mutate(data, {
+      onSuccess: () => router.push("/"),
+      onError: (error) => setError(error.message),
+    });
   };
 
   const onSocial = (provider: "google" | "github") => {
-    setError(null);
-    setPending(true);
-
-    authClient.signIn.social(
+    socialSignIn.mutate(
+      { provider },
       {
-        provider: provider,
-        callbackURL: "/",
-      },
-      {
-        onSuccess: () => {
-          setPending(false);
-        },
-        onError: ({ error }) => {
-          setPending(false);
-          setError(error.message);
-        },
+        onError: (error) => setError(error.message),
       }
     );
   };
@@ -145,7 +117,7 @@ export default function SignIn() {
                 </Alert>
               )}
               <Button
-                disabled={pending}
+                disabled={signIn.isPending}
                 type="submit"
                 className="button-primary"
               >
@@ -158,7 +130,7 @@ export default function SignIn() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Button
-                  disabled={pending}
+                  disabled={socialSignIn.isPending}
                   variant="outline"
                   type="button"
                   className="social-auth-button"
@@ -167,7 +139,7 @@ export default function SignIn() {
                   <FaGoogle /> Google
                 </Button>
                 <Button
-                  disabled={pending}
+                  disabled={socialSignIn.isPending}
                   variant="outline"
                   type="button"
                   className="social-auth-button"

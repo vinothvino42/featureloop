@@ -1,4 +1,4 @@
-import SignUp from "@/components/auth/sign-up";
+import { SignUp } from "@/features/auth/components";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
