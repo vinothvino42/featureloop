@@ -1,11 +1,16 @@
 import { authClient } from "@/lib/auth-client";
-import { ErrorContext } from "better-auth/react";
 
 export type SignInPayload = {
   email: string;
   password: string;
   callbackURL?: string;
 };
+
+export type SocialProvider = "google" | "github";
+export interface SocialSignInPayload {
+  provider: SocialProvider;
+  callbackURL?: string;
+}
 
 export type SignUpPayload = {
   name: string;
@@ -20,15 +25,16 @@ export async function signIn({
   password,
   callbackURL = "/",
 }: SignInPayload) {
-  return new Promise<void>((resolve, reject) => {
-    authClient.signIn.email(
-      { email, password, callbackURL },
-      {
-        onSuccess: () => resolve(),
-        onError: (error: ErrorContext) => reject(error),
-      }
-    );
+  const result = await authClient.signIn.email({
+    email,
+    password,
+    callbackURL,
   });
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+  return result;
 }
 
 export async function signUp({
@@ -37,13 +43,27 @@ export async function signUp({
   password,
   callbackURL = "/",
 }: SignUpPayload) {
-  return new Promise<void>((resolve, reject) => {
-    authClient.signUp.email(
-      { name, email, password, callbackURL },
-      {
-        onSuccess: () => resolve(),
-        onError: (error: ErrorContext) => reject(error),
-      }
-    );
+  const result = await authClient.signUp.email({
+    name,
+    email,
+    password,
+    callbackURL,
   });
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+  return result;
+}
+
+export async function socialSignIn({
+  provider,
+  callbackURL = "/",
+}: SocialSignInPayload) {
+  const result = await authClient.signIn.social({ provider, callbackURL });
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+  return result;
 }
