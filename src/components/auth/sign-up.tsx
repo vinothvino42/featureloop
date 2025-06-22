@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import BrandPanel from "./brand-panel";
 import LegalLinks from "./legal-links";
 import FeatureloopIconHeader from "./featureloop-icon-header";
+import { authClient } from "@/lib/auth-client";
 
 const formSchema = z
   .object({
@@ -52,9 +53,50 @@ export default function SignUp() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {};
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    setError(null);
+    setPending(true);
 
-  const onSocial = (provider: "google" | "github") => {};
+    authClient.signUp.email(
+      {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
+          router.push("/");
+        },
+        onError: ({ error }) => {
+          setPending(false);
+          setError(error.message);
+        },
+      }
+    );
+  };
+
+  const onSocial = (provider: "google" | "github") => {
+    setError(null);
+    setPending(true);
+
+    authClient.signIn.social(
+      {
+        provider: provider,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
+        },
+        onError: ({ error }) => {
+          setPending(false);
+          setError(error.message);
+        },
+      }
+    );
+  };
 
   return (
     <div className="flex flex-col gap-6">
