@@ -23,12 +23,8 @@ import { useRouter } from "next/navigation";
 import BrandPanel from "./brand-panel";
 import LegalLinks from "./legal-links";
 import FeatureloopIconHeader from "./featureloop-icon-header";
-import {
-  SignUpInput,
-  signUpInputSchema,
-  useSignUp,
-} from "../hooks/use-sign-up";
-import { useSocialSignIn } from "../hooks/use-social-sign-in";
+import { SignUpInput, signUpInputSchema, useSignUp } from "../api/sign-up";
+import { useSocialSignIn } from "../api/social-sign-in";
 
 export default function SignUp() {
   const router = useRouter();
