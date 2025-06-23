@@ -23,8 +23,12 @@ import BrandPanel from "./brand-panel";
 import LegalLinks from "./legal-links";
 import FeatureloopIconHeader from "./featureloop-icon-header";
 import { useRouter } from "next/navigation";
-import { SignInInput, signInInputSchema, useSignIn } from "../api/sign-in";
-import { useSocialSignIn } from "../api/social-sign-in";
+import {
+  SignInInput,
+  signInInputSchema,
+  useSignIn,
+} from "../hooks/use-sign-in";
+import { useSocialSignIn } from "../hooks/use-social-sign-in";
 
 export default function SignIn() {
   const router = useRouter();
@@ -52,7 +56,7 @@ export default function SignIn() {
       { provider },
       {
         onError: (error) => setError(error.message),
-      }
+      },
     );
   };
 

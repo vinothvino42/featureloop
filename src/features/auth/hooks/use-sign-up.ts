@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
-import { authClient } from "@/lib/auth-client";
+import { SignUpPayload, signUp } from "../services/auth-service";
+import { AuthResult } from "../../../../types/auth";
 
 export const signUpInputSchema = z
   .object({
@@ -17,34 +18,7 @@ export const signUpInputSchema = z
 export type SignUpInput = z.infer<typeof signUpInputSchema>;
 
 export function useSignUp() {
-  return useMutation({
+  return useMutation<AuthResult, Error, SignUpPayload>({
     mutationFn: (params: SignUpPayload) => signUp(params),
   });
-}
-
-type SignUpPayload = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  callbackURL?: string;
-};
-
-async function signUp({
-  name,
-  email,
-  password,
-  callbackURL = "/",
-}: SignUpPayload) {
-  const result = await authClient.signUp.email({
-    name,
-    email,
-    password,
-    callbackURL,
-  });
-
-  if (result.error) {
-    throw new Error(result.error.message);
-  }
-  return result;
 }
