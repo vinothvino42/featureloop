@@ -10,7 +10,7 @@ export default function RootPage() {
   if (!!session) {
     redirect("/projects");
   } else {
-    redirect("/sign-in");
+    // redirect("/sign-in");
   }
 
   return (
