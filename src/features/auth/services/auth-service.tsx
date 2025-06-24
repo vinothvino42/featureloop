@@ -25,7 +25,7 @@ export interface SocialSignInPayload {
 export async function signIn({
   email,
   password,
-  callbackURL = "/",
+  callbackURL = "/projects",
 }: SignInPayload): Promise<AuthResult> {
   const result = await authClient.signIn.email({
     email,
@@ -48,7 +48,7 @@ export async function signUp({
   name,
   email,
   password,
-  callbackURL = "/",
+  callbackURL = "/projects",
 }: SignUpPayload): Promise<AuthResult> {
   const result = await authClient.signUp.email({
     name,
@@ -70,7 +70,7 @@ export async function signUp({
 
 export async function socialSignIn({
   provider,
-  callbackURL = "/",
+  callbackURL = "/projects",
 }: SocialSignInPayload): Promise<object> {
   const result = await authClient.signIn.social({ provider, callbackURL });
 
