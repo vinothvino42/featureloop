@@ -28,7 +28,15 @@ const user = {
   avatar: "https://i.pravatar.cc/150?img=4",
 };
 
-export default function AvatarMenu() {
+export interface AvatarMenuProps {
+  onLogoutClicked: () => void;
+  onAccountClicked: () => void;
+}
+
+export default function AvatarMenu({
+  onAccountClicked,
+  onLogoutClicked,
+}: AvatarMenuProps) {
   // const { isMobile } = useSidebar();
   const isMobile = false;
   const menuItems = [{ icon: BadgeCheck, label: "Account" }];
@@ -51,11 +59,11 @@ export default function AvatarMenu() {
           align="end"
           sideOffset={4}
         >
-          <AvatarListTile />
+          <AvatarListTile onAccountClicked={onAccountClicked} />
           <DropdownMenuSeparator />
           <AvatarDropdownMenuGroup items={menuItems} />
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">
+          <DropdownMenuItem variant="destructive" onClick={onLogoutClicked}>
             <LogOut />
             Logout
           </DropdownMenuItem>
@@ -65,9 +73,13 @@ export default function AvatarMenu() {
   );
 }
 
-function AvatarListTile() {
+function AvatarListTile({
+  onAccountClicked,
+}: {
+  onAccountClicked: () => void;
+}) {
   return (
-    <DropdownMenuLabel className="p-0 font-normal">
+    <DropdownMenuLabel className="p-0 font-normal" onClick={onAccountClicked}>
       <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
         <Avatar className="h-8 w-8 rounded-lg">
           <AvatarImage src={user.avatar} alt={user.name} />
