@@ -1,5 +1,5 @@
 import { authClient } from "@/lib/auth-client";
-import { AuthResult } from "../../../../types/auth";
+import { AuthResult } from "../../../types/auth";
 
 export type SignInPayload = {
   email: string;

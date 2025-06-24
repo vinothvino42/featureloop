@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { SignInPayload, signIn } from "../services/auth-service";
-import { AuthResult } from "../../../../types/auth";
+import { AuthResult } from "../../../types/auth";
 
 export const signInInputSchema = z.object({
   email: z.string().email(),
