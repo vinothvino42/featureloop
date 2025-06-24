@@ -38,6 +38,7 @@
   --sidebar-ring: oklch(0.623 0.214 259.815);
   --flutter: oklch(0.696 0.17 162.48);
   --react-native: oklch(0.645 0.246 16.439);
+  --dashboard-background: #f5f7fb;
 }
 
 .dark {
@@ -74,6 +75,7 @@
   --sidebar-ring: oklch(0.488 0.243 264.376);
   --flutter: oklch(0.696 0.17 162.48);
   --react-native: oklch(0.645 0.246 16.439);
+  --dashboard-background: #f5f7fb;
 }
 
 @theme inline {
@@ -111,6 +113,7 @@
   --color-chart-5: var(--chart-5);
   --color-flutter: var(--flutter);
   --color-react-native: var(--react-native);
+  --color-dashboard-background: var(--dashboard-background);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
