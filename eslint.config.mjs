@@ -18,6 +18,7 @@ const eslintConfig = [
       "prefer-arrow-callback": ["error"],
       "prefer-template": ["error"],
     },
+    ignorePatterns: ["src/components/ui", "src/hooks/use-mobile.ts"],
   }),
 ];
 
