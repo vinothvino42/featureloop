@@ -26,7 +26,7 @@ export const navigationMenus = {
     },
     {
       title: "Settings",
-      url: "/project-setting",
+      url: "/settings",
       icon: Settings,
     },
   ],
