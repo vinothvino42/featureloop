@@ -150,3 +150,7 @@
     @apply w-full cursor-pointer;
   }
 }
+
+@utility card-section {
+  @apply rounded-xl bg-white p-4 shadow-xs;
+}

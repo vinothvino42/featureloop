@@ -5,5 +5,5 @@ export function CardContainer({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={`card_section ${className}`}>{children}</div>;
+  return <div className={`card-section ${className}`}>{children}</div>;
 }
