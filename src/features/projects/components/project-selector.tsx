@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/utils/cn";
+import { cn } from "@/utils/utils";
 
 const projects = [
   {
